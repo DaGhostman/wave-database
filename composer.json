@@ -1,0 +1,23 @@
+{
+    "name": "wave/wave-database",
+    "description": "Database interaction package for wave Framework",
+    "minimum-stability": "stable",
+    "license": "proprietary",
+    "authors": [
+        {
+            "name": "Dimitar Dimitrov",
+            "email": "daghostman.dd@gmail.com"
+        }
+    ],
+    "require": {
+        "wave/wave" : ">=2.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "3.7.*",
+        "squizlabs/php_codesniffer": ">1.5",
+        "satooshi/php-coveralls": "dev-master"
+    },
+    "autoload": {
+        "psr-0": { "Wave\\Framework\\": "src" }
+    }
+}
