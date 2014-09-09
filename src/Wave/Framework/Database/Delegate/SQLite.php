@@ -42,5 +42,7 @@ class SQLite extends stdDelegate {
         $this->database->query(
             sprintf("%s ORDER BY %s", $this->database->getQuery(), $by)
         );
+
+        return $this;
     }
 } 

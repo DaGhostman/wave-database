@@ -129,6 +129,13 @@ abstract class stdDelegate {
         return $this->inTransaction;
     }
 
+    public function exec($params = array())
+    {
+        $this->database->exec($params);
+
+        return $this;
+    }
+
     abstract public function beginTransaction();
 
     abstract public function insert($table, $field);
