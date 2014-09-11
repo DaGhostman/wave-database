@@ -9,7 +9,7 @@
 namespace Wave\Framework\Database\Delegate;
 
 
-class SQLite extends stdDelegate {
+class SQLite extends StandardDelegate {
 
     const INSERT_OR_FAIL = 'FAIL';
     const INSERT_OR_ROLL = 'ROLLBACK';

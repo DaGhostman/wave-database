@@ -11,7 +11,13 @@ namespace Wave\Framework\Database\Delegate;
 
 use Wave\Framework\Database\Interfaces\DatabaseInterface;
 
-abstract class stdDelegate {
+/**
+ * Class StandardDelegate
+ * @package Wave\Framework\Database\Delegate
+ *
+ * @codeCoverageIgnore
+ */
+abstract class StandardDelegate {
 
     protected $database = null;
     protected $inTransaction = false;
@@ -134,6 +140,11 @@ abstract class stdDelegate {
         $this->database->exec($params);
 
         return $this;
+    }
+
+    public function __toString()
+    {
+        return (string) $this->database;
     }
 
     abstract public function beginTransaction();

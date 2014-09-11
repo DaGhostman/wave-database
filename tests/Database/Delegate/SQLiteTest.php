@@ -12,30 +12,36 @@ namespace Delegate;
 use Wave\Framework\Database\Delegate\SQLite;
 
 class SQLiteTest extends \PHPUnit_Framework_TestCase {
+    /**
+     * @var \Wave\Framework\Database\Delegate\SQLite
+     */
     private $db = null;
-    private $fixtures = array(
-        array('id' => 1, 'movie_name' => 'Captain America: The Winter Soldier', 'movie_year' => 2014),
-        array('id' => 2, 'movie_name' => 'X-Man: Days of the Future Past', 'movie_year' => 2014),
-        array('id' => 3, 'movie_name' => 'Her', 'movie_year' => 2013),
-        array('id' => 4, 'movie_name' => 'Lucy', 'movie_year' => 2014)
-    );
 
     protected function setUp()
     {
-        $db = new \Wave\Framework\Database\Database(new \PDO('sqlite::memory:'));
-        $this->db = new SQLite($db);
-        $db->query("CREATE TABLE IF NOT EXISTS movie (id TEXT, movie_name TEXT, movie_year TEXT)")
-            ->exec();
+        $query = '';
+        $mock = \Mockery::mock('Wave\Framework\Database\Database');
+        $mock->shouldReceive('query')->withAnyArgs()->andReturnUsing(function($q) use (&$query, $mock) {
+            $query = $q;
 
-        foreach ($this->fixtures as $set) {
-            $this->db->insert('movie', array_keys($set))->exec($set);
-        }
+            return $mock;
+        });
+        $mock->shouldReceive('exec')->withAnyArgs()->andReturnSelf();
+        $mock->shouldReceive('execute')->withAnyArgs()->andReturnSelf();
+        $mock->shouldReceive('getQuery')->withAnyArgs()->andReturnUsing(function () use (&$query) {
+            return $query;
+        });
+        $mock->shouldReceive('__toString')->withNoArgs()->andReturnUsing(function() use (&$query) {
+            return $query;
+        });
+
+        $this->db = new SQLite($mock);
 
     }
 
     protected function tearDown()
     {
-        $this->db->delete('movie')->exec();
+        \Mockery::close();
     }
 
     public function testDatabaseInit()
@@ -48,63 +54,62 @@ class SQLiteTest extends \PHPUnit_Framework_TestCase {
         );
     }
 
-    public function testSelectStatements()
+    public function testInsertQueryString()
     {
-        $db = $this->db;
+        $this->db->insert('test', array('id', 'name'));
 
-        $result = $db->select('movie', array('movie_year', 'movie_name'))->exec()->fetch();
-        $this->assertInstanceOf(
-            '\Wave\Framework\Database\Component\Row',
-            $result
+        $this->assertSame(
+            'INSERT OR FAIL INTO test (id, name) VALUES (:id, :name)',
+            (string) $this->db
         );
+    }
 
-
-        $this->assertEquals('2014', $result->movie_year);
-        $this->assertEquals('2014', $result[0]);
-        $this->assertEquals(
-            'Captain America: The Winter Soldier', $result->movie_name
+    public function testTransactionStart()
+    {
+        $this->db->beginTransaction();
+        $this->assertSame(
+            'BEGIN TRANSACTION',
+            (string) $this->db
         );
-        $this->assertEquals('Captain America: The Winter Soldier', $result[1]);
+    }
+
+    public function testOrderQuery()
+    {
+        $this->db->order('id');
+
+        $this->assertSame(' ORDER BY id', (string) $this->db);
+    }
+
+
+    public function testPlainSelectQuery()
+    {
+        $this->db->select('test', array('id', 'name'));
+        $this->assertSame(
+            'SELECT id, name FROM test',
+            (string) $this->db
+        );
     }
 
     public function testSelectWithLimit()
     {
-        $db = $this->db;
-        $result = $db->select('movie', array('movie_name', 'movie_year'))
-            ->order('id')
-            ->limit(1, 3)
-            ->exec()
-            ->fetchAll();
+        $this->db->select('test', array('id', 'name'))
+            ->limit(3);
 
-
-        $this->assertSame(1, count($result));
-        $this->assertInstanceOf(
-            '\Wave\Framework\Database\Component\Table',
-            $result
-        );
-
-        $this->assertSame('Lucy', $result->current()->movie_name);
-    }
-
-    public function testInsert()
-    {
-        $db = $this->db;
-        $db->insert('movie', array('id', 'movie_name', 'movie_year'))
-            ->execute(array('id' => 5, 'movie_name' => 'It', 'movie_year' => '1990'));
-
-        $result = $db->select('movie', array('id', 'movie_name'))
-            ->where('movie_name = :mname')
-            ->exec(array('mname' => 'It'))
-            ->fetch();
-
-        $this->assertEquals(5, $result['id']);
-    }
-
-    public function testTransaction()
-    {
-        $this->assertInstanceOf(
-            '\Wave\Framework\Database\Delegate\SQLite',
-            $this->db->beginTransaction()
+        $this->assertSame(
+            'SELECT id, name FROM test LIMIT 3 OFFSET 0',
+            (string) $this->db
         );
     }
+
+    public function testSelectWithWhere()
+    {
+        $this->db->select('test', array('id', 'name'))
+            ->where('id = 1');
+
+        $this->assertSame(
+            'SELECT id, name FROM test WHERE id = 1',
+            (string) $this->db
+        );
+    }
+
 }

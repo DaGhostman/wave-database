@@ -9,7 +9,7 @@
 namespace Wave\Framework\Database\Delegate;
 
 
-class MySQL extends stdDelegate
+class MySQL extends StandardDelegate
 {
 
     const INSERT_PRIORITY_HIGH = 'HIGH_PRIORITY';

@@ -9,7 +9,7 @@
 namespace Wave\Framework\Database\Delegate;
 
 
-class PGSql extends stdDelegate {
+class PGSql extends StandardDelegate {
     public function insert($table, $fields) {
         $this->database->query(sprintf(
             "INSERT INTO %s (%s) VALUES (:%s)",
