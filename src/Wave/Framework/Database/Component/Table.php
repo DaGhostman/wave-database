@@ -9,7 +9,8 @@
 namespace Wave\Framework\Database\Component;
 
 
-class Table implements \Iterator, \Countable {
+class Table implements \Iterator, \Countable
+{
 
     protected $name = null;
     protected $pkey = null;
@@ -19,7 +20,8 @@ class Table implements \Iterator, \Countable {
     private $position = 0;
 
 
-    public function __construct($name, $rows, $primaryKey = null) {
+    public function __construct($name, $rows, $primaryKey = null)
+    {
         $this->pkey = $primaryKey;
 
         $this->rows = $rows;
@@ -37,7 +39,8 @@ class Table implements \Iterator, \Countable {
         $this->pkey = $key;
     }
 
-    public function getById($id) {
+    public function getById($id)
+    {
         if (is_null($this->pkey)) {
             throw new \Exception("Primary key not defined");
         }
@@ -49,23 +52,28 @@ class Table implements \Iterator, \Countable {
         return $this->rows[$id];
     }
 
-    public function current () {
+    public function current ()
+    {
         return $this->rows[$this->position];
     }
 
-    public function next () {
+    public function next ()
+    {
         $this->position++;
     }
 
-    public function key () {
+    public function key ()
+    {
         return $this->position;
     }
 
-    public function valid () {
+    public function valid ()
+    {
         return isset($this->rows[$this->position]);
     }
 
-    public function rewind () {
+    public function rewind ()
+    {
         $this->position = 0;
     }
 
@@ -73,6 +81,4 @@ class Table implements \Iterator, \Countable {
     {
         return count($this->rows);
     }
-
-
 }

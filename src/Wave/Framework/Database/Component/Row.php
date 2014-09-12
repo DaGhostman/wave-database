@@ -10,7 +10,6 @@ namespace Wave\Framework\Database\Component;
 
 use \Wave\Framework\Storage\Registry;
 
-
 class Row implements \ArrayAccess, \IteratorAggregate
 {
     private $storage = null;
@@ -24,7 +23,8 @@ class Row implements \ArrayAccess, \IteratorAggregate
         ));
     }
 
-    public function __get($field) {
+    public function __get($field)
+    {
         return $this->storage->get($field);
     }
 
@@ -36,25 +36,30 @@ class Row implements \ArrayAccess, \IteratorAggregate
     /**
      * @codeCoverageIgnore
      */
-    public function offsetSet($key, $value) {
+    public function offsetSet($key, $value)
+    {
 
     }
 
-    public function offsetGet($key) {
+    public function offsetGet($key)
+    {
         return $this->$key;
     }
-    public function offsetExists($key) {
+    public function offsetExists($key)
+    {
         return $this->storage->exists($key);
     }
 
     /**
      * @codeCoverageIgnore
      */
-    public function offsetUnset($key) {
+    public function offsetUnset($key)
+    {
 
     }
 
-    public function getIterator() {
+    public function getIterator()
+    {
         return $this->storage->getIterator();
     }
-} 
+}
