@@ -52,27 +52,27 @@ class Table implements \Iterator, \Countable
         return $this->rows[$id];
     }
 
-    public function current ()
+    public function current()
     {
         return $this->rows[$this->position];
     }
 
-    public function next ()
+    public function next()
     {
         $this->position++;
     }
 
-    public function key ()
+    public function key()
     {
         return $this->position;
     }
 
-    public function valid ()
+    public function valid()
     {
         return isset($this->rows[$this->position]);
     }
 
-    public function rewind ()
+    public function rewind()
     {
         $this->position = 0;
     }
