@@ -73,14 +73,6 @@ class SQLiteTest extends \PHPUnit_Framework_TestCase {
         );
     }
 
-    public function testOrderQuery()
-    {
-        $this->db->order('id');
-
-        $this->assertSame(' ORDER BY id', (string) $this->db);
-    }
-
-
     public function testPlainSelectQuery()
     {
         $this->db->select('test', array('id', 'name'));
