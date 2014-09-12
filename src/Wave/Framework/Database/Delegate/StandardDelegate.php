@@ -17,7 +17,8 @@ use Wave\Framework\Database\Interfaces\DatabaseInterface;
  *
  * @codeCoverageIgnore
  */
-abstract class StandardDelegate {
+abstract class StandardDelegate
+{
 
     protected $database = null;
     protected $inTransaction = false;
@@ -41,7 +42,8 @@ abstract class StandardDelegate {
         return $this;
     }
 
-    public function update($table, $fields) {
+    public function update($table, $fields)
+    {
         $binds = array();
         foreach ($fields as $field) {
             array_push($binds, sprintf("%s = :%s", $field, $field));
@@ -52,13 +54,15 @@ abstract class StandardDelegate {
         return $this;
     }
 
-    public function delete($table) {
+    public function delete($table)
+    {
         $this->database->query(sprintf("DELETE FROM %s", $table), $table);
 
         return $this;
     }
 
-    public function where($clause) {
+    public function where($clause)
+    {
         $this->database->query(
             sprintf("%s WHERE %s", $this->database->getQuery(), $clause)
         );
@@ -84,7 +88,8 @@ abstract class StandardDelegate {
         return $this;
     }
 
-    public function order($by, $order) {
+    public function order($by, $order)
+    {
         $this->database->query(
             sprintf("%s ORDER BY %s %s", $this->database->getQuery(), $by, $order)
         );
@@ -150,6 +155,4 @@ abstract class StandardDelegate {
     abstract public function beginTransaction();
 
     abstract public function insert($table, $field);
-
-
-} 
+}

@@ -19,7 +19,7 @@ class Database implements DatabaseInterface
     /**
      * @var \PDO
      */
-    protected $link = null;
+    protected $link;
     /**
      * @var \PDOStatement
      */
@@ -30,12 +30,14 @@ class Database implements DatabaseInterface
     protected $query = '';
 
 
-    public function __construct($connection) {
+    public function __construct($connection)
+    {
         $this->link = $connection;
         $this->link->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
     }
 
-    public function query($sql, $tableName = null) {
+    public function query($sql, $tableName = null)
+    {
         if (!is_null($tableName)) {
             $this->table = $tableName;
         }
@@ -52,19 +54,23 @@ class Database implements DatabaseInterface
 
 
 
-    public function execute($params = array(), $options = array()) {
+    public function execute($params = array(), $options = array())
+    {
         $this->stmt = $this->link->prepare($this->query, $options);
         $this->stmt->execute($params);
 
         return $this;
     }
-    public function exec($params = array(), $options = array()) {
+    public function exec($params = array(), $options = array())
+    {
         return $this->execute($params, $options);
     }
-    public function fetch() {
+    public function fetch()
+    {
         return new Row($this->stmt->fetch());
     }
-    public function fetchAll() {
+    public function fetchAll()
+    {
         $rows = array();
 
         foreach ($this->stmt->fetchAll(\PDO::FETCH_BOTH) as $row) {
@@ -74,7 +80,8 @@ class Database implements DatabaseInterface
         return new Table($this->table, $rows);
     }
 
-    public function __toString() {
+    public function __toString()
+    {
         return $this->query;
     }
 }

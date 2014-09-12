@@ -15,12 +15,12 @@ interface DatabaseInterface
      *
      * @return $this
      */
-    public function exec ($params = array(), $options = array());
+    public function exec($params = array(), $options = array());
 
     /**
      * @return string
      */
-    public function getQuery ();
+    public function getQuery();
 
     /**
      * @param string $sql
@@ -28,7 +28,7 @@ interface DatabaseInterface
      *
      * @return $this
      */
-    public function query ($sql, $tableName = null);
+    public function query($sql, $tableName = null);
 
     /**
      * @param array $params
@@ -36,15 +36,15 @@ interface DatabaseInterface
      *
      * @return $this
      */
-    public function execute ($params = array(), $options = array());
+    public function execute($params = array(), $options = array());
 
     /**
      * @return \Wave\Framework\Database\Component\Table
      */
-    public function fetchAll ();
+    public function fetchAll();
 
     /**
      * @return \Wave\Framework\Database\Component\Row
      */
-    public function fetch ();
+    public function fetch();
 }

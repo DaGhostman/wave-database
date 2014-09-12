@@ -17,12 +17,13 @@ class SQLite extends StandardDelegate {
     const INSERT_OR_IGNORE  = 'IGNORE';
     const INSERT_OR_ABORT = 'ABORT';
 
-    public function insert($table, $fields, $or = 'FAIL') {
+    public function insert($table, $fields, $or = 'FAIL')
+    {
         $this->database->query(sprintf(
             "INSERT OR %s INTO %s (%s) VALUES (:%s)",
             $or,
             $table,
-            implode(', ',$fields),
+            implode(', ', $fields),
             implode(", :", $fields)
         ), $table);
 
@@ -45,4 +46,4 @@ class SQLite extends StandardDelegate {
 
         return $this;
     }
-} 
+}

@@ -21,19 +21,21 @@ class MySQL extends StandardDelegate
     protected $database;
 
 
-    public function insert($table, $fields, $priority = 'LOW_PRIORITY') {
+    public function insert($table, $fields, $priority = 'LOW_PRIORITY')
+    {
         $this->database->query(sprintf(
             "INSERT %s INTO %s (%s) VALUES (:%s)",
             $priority,
             $table,
-            implode(', ',$fields),
+            implode(', ', $fields),
             implode(", :", $fields)
         ), $table);
 
         return $this;
     }
 
-    public function limit($limit = 150, $offset = 0) {
+    public function limit($limit = 150, $offset = 0)
+    {
         $this->database->query(
             sprintf("%s LIMIT %d, %d", $this->database->getQuery(), $offset, $limit)
         );
@@ -50,4 +52,4 @@ class MySQL extends StandardDelegate
     }
 
 
-} 
+}
