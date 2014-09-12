@@ -6,16 +6,21 @@
  * Time: 20:10
  */
 
-class DatabaseTest extends \PHPUnit_Framework_TestCase {
+namespace Tests;
+
+use Wave\Framework\Database\Database;
+
+class DatabaseTest extends \PHPUnit_Framework_TestCase
+{
 
     /**
-     * @var \Wave\Framework\Database\Database
+     * @var Database
      */
     private $db = null;
 
     protected function setUp()
     {
-        $this->db = new \Wave\Framework\Database\Database(new \PDO('sqlite::memory:'));
+        $this->db = new Database(new \PDO('sqlite::memory:'));
     }
 
     protected function tearDown()

@@ -10,7 +10,8 @@ namespace Delegate;
 
 use \Wave\Framework\Database\Delegate\MySQL;
 
-class MySQLTest extends \PHPUnit_Framework_TestCase {
+class MySQLTest extends \PHPUnit_Framework_TestCase
+{
 
     /**
      * @var \Wave\Framework\Database\Delegate\MySQL
@@ -21,7 +22,7 @@ class MySQLTest extends \PHPUnit_Framework_TestCase {
     {
         $query = '';
         $mock = \Mockery::mock('Wave\Framework\Database\Database');
-        $mock->shouldReceive('query')->withAnyArgs()->andReturnUsing(function($q) use (&$query, $mock) {
+        $mock->shouldReceive('query')->withAnyArgs()->andReturnUsing(function ($q) use (&$query, $mock) {
             $query = $q;
 
             return $mock;
@@ -31,7 +32,7 @@ class MySQLTest extends \PHPUnit_Framework_TestCase {
         $mock->shouldReceive('getQuery')->withAnyArgs()->andReturnUsing(function () use (&$query) {
             return $query;
         });
-        $mock->shouldReceive('__toString')->withNoArgs()->andReturnUsing(function() use (&$query) {
+        $mock->shouldReceive('__toString')->withNoArgs()->andReturnUsing(function () use (&$query) {
             return $query;
         });
 
@@ -54,7 +55,7 @@ class MySQLTest extends \PHPUnit_Framework_TestCase {
 
     public function testLimit()
     {
-        $this->db->limit(1,2);
+        $this->db->limit(1, 2);
         $this->assertSame(
             ' LIMIT 2, 1',
             (string) $this->db
