@@ -50,6 +50,4 @@ class MySQL extends StandardDelegate
 
         return $this;
     }
-
-
 }

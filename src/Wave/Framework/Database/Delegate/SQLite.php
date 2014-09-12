@@ -9,7 +9,8 @@
 namespace Wave\Framework\Database\Delegate;
 
 
-class SQLite extends StandardDelegate {
+class SQLite extends StandardDelegate
+{
 
     const INSERT_OR_FAIL = 'FAIL';
     const INSERT_OR_ROLL = 'ROLLBACK';
@@ -34,15 +35,6 @@ class SQLite extends StandardDelegate {
     {
         $this->inTransaction = true;
         $this->database->query('BEGIN TRANSACTION')->exec();
-
-        return $this;
-    }
-
-    public function order($by)
-    {
-        $this->database->query(
-            sprintf("%s ORDER BY %s", $this->database->getQuery(), $by)
-        );
 
         return $this;
     }
