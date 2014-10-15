@@ -9,30 +9,56 @@
 namespace Wave\Framework\Database\Component;
 
 
+use Wave\Framework\Database\Delegate\StandardDelegate;
+
 class Table implements \Iterator, \Countable
 {
 
     protected $name = null;
-    protected $pkey = null;
+    protected $pkey = 'id';
+
+    /**
+     * @var \Wave\Framework\Database\Delegate\StandardDelegate
+     */
+    protected $link = null;
 
     protected $rows = array();
 
     private $position = 0;
 
 
-    public function __construct($name, $rows, $primaryKey = null)
+    public function __construct($rows, $primaryKey = null, $name = null, $link = null)
     {
-        $this->pkey = $primaryKey;
+        if (!empty($name)) {
+            $this->name = $name;
+        }
 
-        $this->rows = $rows;
-
+        if (!empty($link) && !$link instanceof StandardDelegate) {
+            $this->link = $link;
+        }
 
         if (!is_null($primaryKey)) {
-            foreach ($rows as $row) {
-                $this->rows[--$row->$primaryKey] = $row;
+            $this->pkey = $primaryKey;
+        }
+
+        $this->aggregateRows($rows);
+    }
+
+    public function aggregateRows($rows)
+    {
+        if (!empty($rows)) {
+            if (!$rows[0]->{$this->pkey}) {
+                foreach (new \ArrayIterator($rows) as $row) {
+                    $this->rows[$row->{$this->pkey}] = $row;
+                }
+            } else {
+                foreach (new \ArrayIterator($rows) as $id => $row) {
+                    $this->rows[$id] = $row;
+                }
             }
         }
     }
+
 
     public function setPrimaryKey($key)
     {
@@ -80,5 +106,38 @@ class Table implements \Iterator, \Countable
     public function count()
     {
         return count($this->rows);
+    }
+
+    public function update()
+    {
+        if (is_null($this->link)) {
+            throw new \LogicException('Unable to save. No connection link specified');
+        }
+
+        if (is_null($this->name)) {
+            throw new \LogicException('No table name specified');
+        }
+
+        foreach ($this->rows as $row) {
+            $this->link->update($this->name, array_keys($row))
+                ->exec($row);
+        }
+    }
+
+    public function push()
+    {
+
+        if (is_null($this->link)) {
+            throw new \LogicException('Unable to save. No connection link specified');
+        }
+
+        if (is_null($this->name)) {
+            throw new \LogicException('No table name specified');
+        }
+
+        foreach ($this->rows as $row) {
+            $this->link->insert($this->name, array_keys($row))
+                ->exec($row);
+        }
     }
 }
