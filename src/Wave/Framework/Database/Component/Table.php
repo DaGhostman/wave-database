@@ -15,7 +15,6 @@ class Table implements \Iterator, \Countable
 {
 
     protected $name = null;
-    protected $pkey = 'id';
 
     /**
      * @var \Wave\Framework\Database\Delegate\StandardDelegate
@@ -27,7 +26,7 @@ class Table implements \Iterator, \Countable
     private $position = 0;
 
 
-    public function __construct($rows, $primaryKey = null, $name = null, $link = null)
+    public function __construct($rows, $name = null, $link = null)
     {
         if (!empty($name)) {
             $this->name = $name;
@@ -35,10 +34,6 @@ class Table implements \Iterator, \Countable
 
         if (!empty($link) && !$link instanceof StandardDelegate) {
             $this->link = $link;
-        }
-
-        if (!is_null($primaryKey)) {
-            $this->pkey = $primaryKey;
         }
 
         if (is_array($rows)) {
