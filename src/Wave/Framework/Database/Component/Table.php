@@ -41,41 +41,9 @@ class Table implements \Iterator, \Countable
             $this->pkey = $primaryKey;
         }
 
-        $this->aggregateRows($rows);
-    }
-
-    public function aggregateRows($rows)
-    {
-        if (!empty($rows)) {
-            if (!$rows[0]->{$this->pkey}) {
-                foreach (new \ArrayIterator($rows) as $row) {
-                    $this->rows[$row->{$this->pkey}] = $row;
-                }
-            } else {
-                foreach (new \ArrayIterator($rows) as $id => $row) {
-                    $this->rows[$id] = $row;
-                }
-            }
+        if (is_array($rows)) {
+            $this->rows = $rows;
         }
-    }
-
-
-    public function setPrimaryKey($key)
-    {
-        $this->pkey = $key;
-    }
-
-    public function getById($id)
-    {
-        if (is_null($this->pkey)) {
-            throw new \Exception("Primary key not defined");
-        }
-
-        if (!isset($this->rows[--$id])) {
-            throw new \OutOfBoundsException("Requested id is not in range");
-        }
-
-        return $this->rows[$id];
     }
 
     public function current()

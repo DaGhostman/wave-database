@@ -77,7 +77,7 @@ class Database implements DatabaseInterface
             array_push($rows, new Row($row));
         }
 
-        return new Table($this->table, $rows);
+        return new Table($rows, 'id', $this->table);
     }
 
     public function __toString()
